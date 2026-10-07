@@ -1,0 +1,7 @@
+VoiceShift original code is Apache License 2.0. See LICENSE.
+
+app/src/main/cpp/AudioBufferHeader.h is from jsuppe/aosp-virtual-mic, commit a8280a03f66b9ab5b94751b038605cddba7cc49f; upstream declares Apache-2.0. Its source header is retained.
+
+Gradle wrapper scripts/JAR originate from Gradle and are distributed under Apache-2.0 with upstream script headers retained.
+
+MeanVC2 model conversion tools target ASLP-lab/MeanVC2. MeanVC2 weights are not bundled.

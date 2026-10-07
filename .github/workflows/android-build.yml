@@ -1,0 +1,72 @@
+name: Android APK Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Test and build arm64 APK
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Prepare Gradle and validate wrapper
+        uses: gradle/actions/setup-gradle@v4
+      - name: Install pinned Android SDK components
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install \
+            "platforms;android-35" "build-tools;35.0.0" \
+            "ndk;27.0.12077973" "cmake;3.22.1"
+      - name: Make wrapper executable
+        run: chmod +x gradlew native/run-tests.sh
+      - name: Native host tests (ASan and UBSan)
+        run: ./native/run-tests.sh
+      - name: Android unit tests
+        run: ./gradlew --no-daemon --stacktrace testDebugUnitTest
+      - name: Android lint
+        run: ./gradlew --no-daemon --stacktrace lintDebug
+      - name: Build installable debug APK
+        run: ./gradlew --no-daemon --stacktrace assembleDebug
+      - name: Verify APK signature, manifest and ABI
+        shell: bash
+        run: |
+          set -euo pipefail
+          apk=app/build/outputs/apk/debug/app-debug.apk
+          test -s "$apk"
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$apk"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$apk" | tee apk-badging.txt
+          grep -q "package: name='dev.voiceshift'" apk-badging.txt
+          grep -q "launchable-activity:" apk-badging.txt
+          grep -q "native-code: 'arm64-v8a'" apk-badging.txt
+          mkdir -p artifacts
+          cp "$apk" artifacts/VoiceShift-debug.apk
+          sha256sum artifacts/VoiceShift-debug.apk
+      - name: Upload VoiceShift APK
+        id: apk
+        uses: actions/upload-artifact@v4
+        with:
+          name: VoiceShift-APK
+          path: artifacts/VoiceShift-debug.apk
+          if-no-files-found: error
+          retention-days: 30
+      - name: APK download summary
+        run: |
+          printf '### VoiceShift APK\n\n[Download VoiceShift-APK](%s)\n\nDebug-signed arm64 APK. MeanVC2 and system virtual microphone are not ready.\n' '${{ steps.apk.outputs.artifact-url }}' >> "$GITHUB_STEP_SUMMARY"
