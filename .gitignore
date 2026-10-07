@@ -1,8 +1,25 @@
-.gradle/
+
+# Gradle
+# Misc
+# Native
+*.bak
+*.iml
+*.log
+*.mnn
+*.o
+*.onnx
+*.so
+.DS_Store
 .cxx/
-**/build/
+.gradle/
+.idea/
+Thumbs.db
+build/
+icon.png
 local.properties
-*.jks
-*.keystore
-__pycache__/
-artifacts/
+models/
+ollama
+rvc_models/
+icon.png
+icon.png
+files/

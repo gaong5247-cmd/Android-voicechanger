@@ -1,5 +1,0 @@
-cmake_minimum_required(VERSION 3.22.1)
-project(voiceshift LANGUAGES CXX)
-add_library(voiceshift SHARED transport.cpp)
-target_compile_features(voiceshift PRIVATE cxx_std_17)
-target_link_libraries(voiceshift PRIVATE android log)

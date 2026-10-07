@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MeowRVC 한국어판</string>
+
+    <!-- 状态 -->
+    <string name="status_idle">준비됨</string>
+    <string name="status_recording">● 녹음 중…</string>
+    <string name="status_processing">처리 중…</string>
+    <string name="status_playing">▶ 재생 중…</string>
+    <string name="status_done">재생 완료</string>
+
+    <!-- 녹음按钮 -->
+    <string name="btn_record">녹음</string>
+    <string name="btn_pause">일시정지</string>
+    <string name="btn_resume">계속</string>
+    <string name="btn_stop">중지</string>
+    <string name="btn_process">변환 후 재생</string>
+
+    <!-- AI RVC 模式 -->
+    <string name="rvc_model_title">AI 모델</string>
+    <string name="rvc_help">PC에서 변환한 .onnx 모델 폴더를 /sdcard/models/ 에 넣으세요</string>
+    <string name="rvc_refresh">목록 새로고침</string>
+    <string name="rvc_delete">모델 삭제</string>
+    <string name="rvc_no_model">모델을 찾지 못함</string>
+    <string name="rvc_model_loaded">불러옴：%1$s</string>
+    <string name="rvc_model_loading">모델 불러오는 중…</string>
+    <string name="rvc_model_failed">모델 불러오기 실패</string>
+    <string name="rvc_start">시작 AI 실시간 음성변환</string>
+    <string name="rvc_stop">중지 AI 실시간 음성변환</string>
+    <string name="rvc_params">음성변환 설정</string>
+    <string name="rvc_f0_key">피치 이동：%1$+d 반음</string>
+    <string name="rvc_latency">지연：%1$.2f 초</string>
+    <string name="rvc_noise">노이즈 감소：%1$d（0=关，5=最强）</string>
+    <string name="rvc_eq">스피커 보정：%1$d（0=关，5=最强）</string>
+    <string name="rvc_protect">호흡 보호：%1$s</string>
+    <string name="rvc_no_models">모델이 없습니다。PC에서 convert_rvc.py로 .pth → .onnx 변환 후 이 폴더에 넣으세요</string>
+</resources>
