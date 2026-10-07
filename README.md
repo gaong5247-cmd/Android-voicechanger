@@ -13,6 +13,8 @@ Native Android zero-shot voice changer project based on MeanVC2. The first miles
 
 Artifacts are retained for 30 days. Sign in to GitHub to download them. You can create a fresh build with **Run workflow**; no local Android Studio build is required.
 
+[First verified APK build](https://github.com/gaong5247-cmd/Android-voicechanger/actions/runs/37586165030) · [VoiceShift-APK artifact](https://github.com/gaong5247-cmd/Android-voicechanger/actions/runs/37586165030/artifacts/11467315206)
+
 ## Build
 
 Open the repository root in Android Studio, or use JDK 17 and the checked-in Gradle Wrapper:
@@ -35,7 +37,7 @@ The workflow has separate steps for host C++ tests, Android unit tests, lint, AP
 ./native/run-tests.sh
 ```
 
-The APK is debug-signed for installation testing. Runtime device tests and the current actual CI result are documented in [Build Status](docs/BUILD_STATUS.md). An APK signature/manifest check establishes package structure; it does not certify launch stability on every phone.
+The APK is debug-signed for installation testing. Runtime device tests and the current actual CI result are documented in [Build Status](docs/BUILD_STATUS.md). The workflow also builds an emulator-only x86_64 APK for Android 15 install/launch/rotation/permission smoke tests and uploads screenshot/UI-tree/logcat evidence separately as `VoiceShift-Emulator-QA`. The user APK remains arm64. Emulator verification does not certify every phone.
 
 ## App state
 

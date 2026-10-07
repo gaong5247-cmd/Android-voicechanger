@@ -70,3 +70,39 @@ jobs:
       - name: APK download summary
         run: |
           printf '### VoiceShift APK\n\n[Download VoiceShift-APK](%s)\n\nDebug-signed arm64 APK. MeanVC2 and system virtual microphone are not ready.\n' '${{ steps.apk.outputs.artifact-url }}' >> "$GITHUB_STEP_SUMMARY"
+
+  emulator-smoke:
+    name: Android 15 install and launch smoke test
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Prepare Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: Install Android emulator and build tools
+        run: |
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install \
+            "platforms;android-35" "build-tools;35.0.0" \
+            "ndk;27.0.12077973" "cmake;3.22.1" \
+            "emulator" "system-images;android-35;google_apis;x86_64"
+      - name: Enable runner KVM
+        run: sudo chmod a+rw /dev/kvm
+      - name: Build emulator-only ABI (distributed APK remains arm64)
+        run: ./gradlew --no-daemon --stacktrace -Pvoiceshift.testAbi=x86_64 assembleDebug
+      - name: Install APK and test launch, rotation, diagnostics and denied permission
+        run: bash tools/ci/emulator-smoke.sh
+      - name: Upload smoke-test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: VoiceShift-Emulator-QA
+          path: qa/
+          if-no-files-found: warn
+          retention-days: 14

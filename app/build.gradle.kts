@@ -9,7 +9,7 @@ android {
   targetSdk = 35
   versionCode = 1
   versionName = "0.1.0"
-  ndk { abiFilters += "arm64-v8a" }
+  ndk { abiFilters += providers.gradleProperty("voiceshift.testAbi").getOrElse("arm64-v8a") }
   externalNativeBuild { cmake { cppFlags += listOf("-std=c++17", "-Wall", "-Wextra", "-Werror") } }
  }
  buildFeatures { compose = true }
