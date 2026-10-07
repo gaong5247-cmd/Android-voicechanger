@@ -97,6 +97,7 @@ jobs:
       - name: Build emulator-only ABI (distributed APK remains arm64)
         run: ./gradlew --no-daemon --stacktrace -Pvoiceshift.testAbi=x86_64 assembleDebug
       - name: Install APK and test launch, rotation, diagnostics and denied permission
+        timeout-minutes: 12
         run: bash tools/ci/emulator-smoke.sh
       - name: Upload smoke-test evidence
         if: always()

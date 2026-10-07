@@ -4,7 +4,7 @@ serial=os.environ.get('ANDROID_SERIAL','emulator-5554')
 qa=pathlib.Path('qa');qa.mkdir(exist_ok=True)
 
 def adb(*args):
-    return subprocess.check_output(['adb','-s',serial,*args],text=True,stderr=subprocess.STDOUT)
+    return subprocess.check_output(['adb','-s',serial,*args],text=True,stderr=subprocess.STDOUT,timeout=30)
 def tree(name):
     adb('shell','uiautomator','dump','/sdcard/voiceshift-ui.xml')
     xml=adb('shell','cat','/sdcard/voiceshift-ui.xml')
@@ -33,7 +33,7 @@ def tap(text=None, resource=None):
         time.sleep(1)
     raise AssertionError(f'UI target missing: {text or resource}')
 def screenshot(name):
-    data=subprocess.check_output(['adb','-s',serial,'exec-out','screencap','-p'])
+    data=subprocess.check_output(['adb','-s',serial,'exec-out','screencap','-p'],timeout=30)
     (qa/f'{name}.png').write_bytes(data)
 def alive():
     assert adb('shell','pidof','dev.voiceshift').strip(),'App process stopped'
